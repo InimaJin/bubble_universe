@@ -1,4 +1,4 @@
-function RangeInput({ labelText, inputId, min, max, inputElements }) {
+function RangeInput({ labelText, inputId, min, max, step, inputElements }) {
 	return (
 		<div>
 			<label htmlFor={inputId}>{labelText}</label>
@@ -7,6 +7,7 @@ function RangeInput({ labelText, inputId, min, max, inputElements }) {
 				type="range"
 				min={min}
 				max={max}
+				step={step}
 				ref={(node) => {
 					inputElements.push(node);
 					return () => inputElements.pop();
@@ -16,44 +17,52 @@ function RangeInput({ labelText, inputId, min, max, inputElements }) {
 	);
 }
 
-export default function Console({ inputElements }) {
+export default function Console({ resetBtnRef, inputElements }) {
 	return (
 		<div className="console">
-			<RangeInput
-				inputElements={inputElements}
-				labelText="N"
-				inputId="iter"
-				min="0"
-				max="200"
-			/>
-			<RangeInput
-				inputElements={inputElements}
-				labelText="tau div"
-				inputId="tau-div"
-				min="1"
-				max="25"
-			/>
-			<RangeInput
-				inputElements={inputElements}
-				labelText="red"
-				inputId="red-fac"
-				min="0"
-				max="255"
-			/>
-			<RangeInput
-				inputElements={inputElements}
-				labelText="green"
-				inputId="green-fac"
-				min="0"
-				max="255"
-			/>
-			<RangeInput
-				inputElements={inputElements}
-				labelText="blue"
-				inputId="blue-fac"
-				min="0"
-				max="255"
-			/>
+			<div className="reset">
+				<button ref={resetBtnRef} aria-label="Reset the console">
+					<img src="/assets/reset_console.png" alt="reset icon" />
+				</button>
+			</div>
+			<div className="inputs">
+				<RangeInput
+					inputElements={inputElements}
+					labelText="N"
+					inputId="iter"
+					min="0"
+					max="200"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="tau div"
+					inputId="tau-div"
+					min="1"
+					max="5"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="red"
+					inputId="red-fac"
+					min="0"
+					max="5"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="green"
+					inputId="green-fac"
+					min="0"
+					max="10"
+					step="2"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="blue"
+					inputId="blue-fac"
+					min="0"
+					max="255"
+				/>
+			</div>
 		</div>
 	);
 }

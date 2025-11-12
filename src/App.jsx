@@ -42,11 +42,12 @@ export default function App() {
 	//Holds the input nodes from the console
 	const inputElements = useRef([]);
 
+	const resetBtn = useRef(null);
 	function initConsoleData() {
 		[iterInput, tauDivInput, redInput, greenInput, blueInput] =
 			inputElements.current;
-		iterInput.value = 140;
-		tauDivInput.value = 25;
+		iterInput.value = 170;
+		tauDivInput.value = 5;
 		redInput.value = 1;
 		greenInput.value = 1;
 		blueInput.value = 99;
@@ -54,6 +55,7 @@ export default function App() {
 
 	useEffect(() => {
 		initConsoleData();
+		resetBtn.current.addEventListener("click", initConsoleData);
 		const canvas = canvasRef.current;
 		let width = Math.min(innerWidth, innerHeight) * 0.8;
 		[canvas.width, canvas.height] = [width, width];
@@ -65,7 +67,7 @@ export default function App() {
 
 	return (
 		<>
-			<Console inputElements={inputElements.current} />
+			<Console resetBtnRef={resetBtn} inputElements={inputElements.current} />
 			<canvas ref={canvasRef}>
 				The Bubble Universe should be displayed here.
 			</canvas>

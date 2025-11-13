@@ -31,7 +31,7 @@ export default function Console({ resetBtnRef, inputElements }) {
 					labelText="N"
 					inputId="iter"
 					min="0"
-					max="200"
+					max="300"
 				/>
 				<RangeInput
 					inputElements={inputElements}

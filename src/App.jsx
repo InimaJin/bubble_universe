@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react";
 //Maps canvas coordinates onto four indices for that pixel in an array
 function coordToColorIndices(canvasWidth, x, y) {
 	const redIndex = 4 * (y * canvasWidth + x);
+	//R.G.B.A
 	return [redIndex, redIndex + 1, redIndex + 2, redIndex + 3];
 }
 
-//Console input elements
-let iterInput, tauDivInput, redInput, greenInput, blueInput;
+let iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput;
 function animate(ctx, width, x = 0, y = 0, v = 0, t = 0) {
 	const n = iterInput.value;
 	const r = (2 * Math.PI) / tauDivInput.value;
@@ -46,7 +46,7 @@ function animate(ctx, width, x = 0, y = 0, v = 0, t = 0) {
 	}
 
 	ctx.putImageData(imgData, 0, 0);
-	t += 0.025;
+	t += 0.025 * speedInput.value;
 	requestAnimationFrame(() => {
 		animate(ctx, width, x, y, v, t);
 	});
@@ -55,34 +55,23 @@ function animate(ctx, width, x = 0, y = 0, v = 0, t = 0) {
 export default function App() {
 	const canvasRef = useRef(null);
 	//Holds the input nodes from the console
-	const inputElements = useRef([]);
-
-	const resetBtn = useRef(null);
-	function initConsoleData() {
-		[iterInput, tauDivInput, redInput, greenInput, blueInput] =
-			inputElements.current;
-		iterInput.value = 220;
-		tauDivInput.value = 5;
-		redInput.value = 1;
-		greenInput.value = 1;
-		blueInput.value = 99;
-	}
+	const inputElements = useRef({});
 
 	useEffect(() => {
-		initConsoleData();
-		resetBtn.current.addEventListener("click", initConsoleData);
+		[iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput] =
+			Object.values(inputElements.current);
+
 		const canvas = canvasRef.current;
 		const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
 		[canvas.width, canvas.height] = [width, width];
 
-		/** @type {CanvasRenderingContext2D} */
 		const ctx = canvas.getContext("2d");
 		animate(ctx, width);
 	}, []);
 
 	return (
 		<>
-			<Console resetBtnRef={resetBtn} inputElements={inputElements.current} />
+			<Console inputElements={inputElements.current} />
 			<canvas ref={canvasRef}>
 				The Bubble Universe should be displayed here.
 			</canvas>

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 function RangeInput({ labelText, inputId, min, max, step, inputElements }) {
 	return (
 		<div>
@@ -9,19 +11,30 @@ function RangeInput({ labelText, inputId, min, max, step, inputElements }) {
 				max={max}
 				step={step}
 				ref={(node) => {
-					inputElements.push(node);
-					return () => inputElements.pop();
+					inputElements[inputId] = node;
+					return () => delete inputElements[inputId];
 				}}
 			/>
 		</div>
 	);
 }
 
-export default function Console({ resetBtnRef, inputElements }) {
+export default function Console({ inputElements }) {
+	function initValues() {
+		inputElements["iter"].value = 220;
+		inputElements["speed"].value = 1;
+		inputElements["tau-div"].value = 5;
+		inputElements["red-fac"].value = 1;
+		inputElements["green-fac"].value = 1;
+		inputElements["blue-fac"].value = 99;
+	}
+
+	useEffect(initValues, []);
+
 	return (
 		<div className="console">
 			<div className="reset">
-				<button ref={resetBtnRef} aria-label="Reset the console">
+				<button aria-label="Reset the console" onClick={initValues}>
 					<img src="/assets/reset_console.png" alt="reset icon" />
 				</button>
 			</div>
@@ -32,6 +45,13 @@ export default function Console({ resetBtnRef, inputElements }) {
 					inputId="iter"
 					min="0"
 					max="300"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="speed"
+					inputId="speed"
+					min="1"
+					max="20"
 				/>
 				<RangeInput
 					inputElements={inputElements}

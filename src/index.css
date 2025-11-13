@@ -36,14 +36,17 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		user-select: none;
 
 		button {
 			background: transparent;
 			outline: none;
 			border: none;
 
-			img:hover {
-				animation: 1s linear infinite rotate;
+			@media screen and (hover: hover) {
+				img:hover {
+					animation: 1s linear infinite rotate;
+				}
 			}
 		}
 	}

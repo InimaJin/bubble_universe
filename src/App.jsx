@@ -4,8 +4,8 @@ import Console from "./Console.jsx";
 import { FrameCalc } from "../pkg/bubble_universe.js";
 
 let iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput;
-function animate(wasm, calc, ctx, width) {
-	const ptr = calc.compute_frame(
+function animate(wasm, fc, ctx, width) {
+	const ptr = fc.compute_frame(
 		width,
 		iterInput.value,
 		speedInput.value,
@@ -24,13 +24,12 @@ function animate(wasm, calc, ctx, width) {
 	ctx.putImageData(imgData, 0, 0);
 
 	requestAnimationFrame(() => {
-		animate(wasm, calc, ctx, ctx.canvas.width);
+		animate(wasm, fc, ctx, ctx.canvas.width);
 	});
 }
 
 export default function App({ wasm }) {
 	const canvasRef = useRef(null);
-	//Holds the input nodes from the console
 	const inputElements = useRef({});
 
 	useEffect(() => {
@@ -41,9 +40,9 @@ export default function App({ wasm }) {
 		const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
 		[canvas.width, canvas.height] = [width, width];
 
-		const calc = new FrameCalc();
+		const fc = new FrameCalc();
 		const ctx = canvas.getContext("2d");
-		animate(wasm, calc, ctx, width);
+		animate(wasm, fc, ctx, width);
 	}, []);
 
 	return (

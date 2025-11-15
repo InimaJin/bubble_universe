@@ -43,7 +43,7 @@
 			outline: none;
 			border: none;
 
-			@media screen and (hover: hover) {
+			@media screen and (hover: hover) and (pointer: fine) {
 				img:hover {
 					animation: 1s linear infinite rotate;
 				}

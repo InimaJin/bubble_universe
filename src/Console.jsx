@@ -21,7 +21,7 @@ function RangeInput({ labelText, inputId, min, max, step, inputElements }) {
 
 export default function Console({ inputElements }) {
 	function initValues() {
-		inputElements["iter"].value = 220;
+		inputElements["iter"].value = 270;
 		inputElements["speed"].value = 1;
 		inputElements["tau-div"].value = 5;
 		inputElements["red-fac"].value = 1;

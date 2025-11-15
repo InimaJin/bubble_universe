@@ -44,7 +44,7 @@ export default function Console({ inputElements }) {
 					labelText="N"
 					inputId="iter"
 					min="0"
-					max="300"
+					max="450"
 				/>
 				<RangeInput
 					inputElements={inputElements}

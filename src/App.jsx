@@ -1,58 +1,34 @@
-import Console from "./Console.jsx";
-
 import { useEffect, useRef } from "react";
 
-//Maps canvas coordinates onto four indices for that pixel in an array
-function coordToColorIndices(canvasWidth, x, y) {
-	const redIndex = 4 * (y * canvasWidth + x);
-	//R.G.B.A
-	return [redIndex, redIndex + 1, redIndex + 2, redIndex + 3];
-}
+import Console from "./Console.jsx";
+import { FrameCalc } from "../pkg/bubble_universe.js";
 
 let iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput;
-function animate(ctx, width, x = 0, y = 0, v = 0, t = 0) {
-	const n = iterInput.value;
-	const r = (2 * Math.PI) / tauDivInput.value;
-	const [redFac, greenFac, blueFac] = [
+function animate(wasm, calc, ctx, width) {
+	const ptr = calc.compute_frame(
+		width,
+		iterInput.value,
+		speedInput.value,
+		tauDivInput.value,
 		redInput.value,
 		greenInput.value,
-		blueInput.value,
-	];
+		blueInput.value
+	);
 
-	const imgData = new ImageData(width, width);
-	const arr = imgData.data;
-	for (let i = 0; i < n; i++) {
-		for (let j = 0; j < n; j++) {
-			const u = Math.sin(i + v) + Math.sin(r * i + x);
-			v = Math.cos(i + v) + Math.cos(r * i + x);
-			x = u + t;
-
-			const [widthHalf, widthQuart] = [width / 2, width / 4];
-			const [xPos, yPos] = [
-				u * widthQuart + widthHalf,
-				v * widthQuart + widthHalf,
-			];
-			const [redIndex, greenIndex, blueIndex, alphaIndex] = coordToColorIndices(
-				width,
-				Math.round(xPos),
-				Math.round(yPos)
-			);
-
-			arr[redIndex] = i * redFac;
-			arr[greenIndex] = j * greenFac;
-			arr[blueIndex] = blueFac;
-			arr[alphaIndex] = 255;
-		}
-	}
-
+	const pixelData = new Uint8ClampedArray(
+		wasm.memory.buffer,
+		ptr,
+		width * width * 4
+	);
+	const imgData = new ImageData(pixelData, width);
 	ctx.putImageData(imgData, 0, 0);
-	t += 0.025 * speedInput.value;
+
 	requestAnimationFrame(() => {
-		animate(ctx, width, x, y, v, t);
+		animate(wasm, calc, ctx, ctx.canvas.width);
 	});
 }
 
-export default function App() {
+export default function App({ wasm }) {
 	const canvasRef = useRef(null);
 	//Holds the input nodes from the console
 	const inputElements = useRef({});
@@ -65,8 +41,9 @@ export default function App() {
 		const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
 		[canvas.width, canvas.height] = [width, width];
 
+		const calc = new FrameCalc();
 		const ctx = canvas.getContext("2d");
-		animate(ctx, width);
+		animate(wasm, calc, ctx, width);
 	}, []);
 
 	return (

@@ -24,6 +24,7 @@ export default function Console({ inputElements }) {
 		inputElements["iter"].value = 250;
 		inputElements["speed"].value = 0.5;
 		inputElements["tau-div"].value = 5;
+		inputElements["px-size"].value = 1;
 		inputElements["red-fac"].value = 1;
 		inputElements["green-fac"].value = 1;
 		inputElements["blue-fac"].value = 99;
@@ -60,6 +61,13 @@ export default function Console({ inputElements }) {
 					inputId="tau-div"
 					min="1"
 					max="5"
+				/>
+				<RangeInput
+					inputElements={inputElements}
+					labelText="px size"
+					inputId="px-size"
+					min="1"
+					max="6"
 				/>
 				<RangeInput
 					inputElements={inputElements}

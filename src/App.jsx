@@ -3,13 +3,20 @@ import { useEffect, useRef } from "react";
 import Console from "./Console.jsx";
 import { FrameCalc } from "../pkg/bubble_universe.js";
 
-let iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput;
+let iterInput,
+	speedInput,
+	tauDivInput,
+	pxSizeInput,
+	redInput,
+	greenInput,
+	blueInput;
 function animate(wasm, fc, ctx, width) {
 	const ptr = fc.compute_frame(
 		width,
 		iterInput.value,
 		speedInput.value,
 		tauDivInput.value,
+		pxSizeInput.value,
 		redInput.value,
 		greenInput.value,
 		blueInput.value
@@ -33,8 +40,15 @@ export default function App({ wasm }) {
 	const inputElements = useRef({});
 
 	useEffect(() => {
-		[iterInput, speedInput, tauDivInput, redInput, greenInput, blueInput] =
-			Object.values(inputElements.current);
+		[
+			iterInput,
+			speedInput,
+			tauDivInput,
+			pxSizeInput,
+			redInput,
+			greenInput,
+			blueInput,
+		] = Object.values(inputElements.current);
 
 		const canvas = canvasRef.current;
 		const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
@@ -42,6 +56,7 @@ export default function App({ wasm }) {
 
 		const fc = new FrameCalc();
 		const ctx = canvas.getContext("2d");
+
 		animate(wasm, fc, ctx, width);
 	}, []);
 

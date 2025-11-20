@@ -10,7 +10,8 @@ let iterInput,
 	redInput,
 	greenInput,
 	blueInput;
-function animate(wasm, fc, ctx, width) {
+function animate(wasm, fc, ctx) {
+	const width = ctx.canvas.width;
 	const ptr = fc.compute_frame(
 		width,
 		iterInput.value,
@@ -31,7 +32,7 @@ function animate(wasm, fc, ctx, width) {
 	ctx.putImageData(imgData, 0, 0);
 
 	requestAnimationFrame(() => {
-		animate(wasm, fc, ctx, ctx.canvas.width);
+		animate(wasm, fc, ctx);
 	});
 }
 
@@ -51,13 +52,17 @@ export default function App({ wasm }) {
 		] = Object.values(inputElements.current);
 
 		const canvas = canvasRef.current;
-		const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
-		[canvas.width, canvas.height] = [width, width];
+		function resizeCanvas() {
+			const width = Math.round(Math.min(innerWidth, innerHeight) * 0.8);
+			[canvas.width, canvas.height] = [width, width];
+		}
+		window.addEventListener("resize", resizeCanvas);
+		resizeCanvas();
 
 		const fc = new FrameCalc();
 		const ctx = canvas.getContext("2d");
 
-		animate(wasm, fc, ctx, width);
+		animate(wasm, fc, ctx);
 	}, []);
 
 	return (
